@@ -1476,7 +1476,8 @@ public abstract class UI extends AbstractSingleComponentContainer implements
             return;
         }
 
-        pushConnection.push();
+        if (pushConnection != null)
+            pushConnection.push();
     }
 
     /**
