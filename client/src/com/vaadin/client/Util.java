@@ -1246,33 +1246,36 @@ public class Util {
      * @param elem
      *            The element to scroll into view
      */
-    public static native void scrollIntoViewVertically(Element elem)
-    /*-{
-        var top = elem.offsetTop;
-        var height = elem.offsetHeight;
-    
-        if (elem.parentNode != elem.offsetParent) {
-          top -= elem.parentNode.offsetTop;
+    public static void scrollIntoViewVertically(Element elem) {
+        scrollIntoViewVertically(null, elem);
+    }
+
+
+    public static void scrollIntoViewVertically(Element thisComponent, Element elem) {
+        int top = elem.getOffsetTop();
+        int height = elem.getOffsetHeight();
+        if (elem.getParentElement() != elem.getOffsetParent()) {
+            top -= elem.getParentElement().getOffsetTop();
         }
-    
-        var cur = elem.parentNode;
-        while (cur && (cur.nodeType == 1)) {
-          if (top < cur.scrollTop) {
-            cur.scrollTop = top;
-          }
-          if (top + height > cur.scrollTop + cur.clientHeight) {
-            cur.scrollTop = (top + height) - cur.clientHeight;
-          }
-    
-          var offsetTop = cur.offsetTop;
-          if (cur.parentNode != cur.offsetParent) {
-            offsetTop -= cur.parentNode.offsetTop;
-          }
-           
-          top += offsetTop - cur.scrollTop;
-          cur = cur.parentNode;
+        com.google.gwt.dom.client.Element cur = elem.getParentElement();
+        while (cur != null && (cur.getNodeType() == 1)) {
+            if (top < cur.getScrollTop()) {
+                cur.setScrollTop(top);
+            }
+            if (top + height > cur.getScrollTop() + cur.getClientHeight()) {
+                cur.setScrollTop(top + height - cur.getClientHeight());
+            }
+            int offsetTop = cur.getOffsetTop();
+            if (cur.getParentNode() != cur.getOffsetParent()) {
+                offsetTop -= cur.getParentElement().getOffsetTop();
+            }
+            top += offsetTop - cur.getScrollTop();
+            if (thisComponent == cur) {
+                break;
+            }
+            cur = cur.getParentElement();
         }
-     }-*/;
+    }
 
     /**
      * Checks if the given event is either a touch event or caused by the left

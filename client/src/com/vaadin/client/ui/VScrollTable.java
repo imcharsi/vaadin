@@ -7277,7 +7277,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
             // get odd scrolling here.
             return;
         }
-        Util.scrollIntoViewVertically(row.getElement());
+        Util.scrollIntoViewVertically(getElement(), row.getElement());
     }
 
     /**
