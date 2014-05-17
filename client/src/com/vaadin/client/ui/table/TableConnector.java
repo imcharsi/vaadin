@@ -270,15 +270,17 @@ public class TableConnector extends AbstractHasComponentsConnector implements
                         .getKey())) {
                     // if row cache was refreshed, focused row should be
                     // in selection and exists with same index
-                    getWidget().setRowFocus(
-                            getWidget().getRenderedRowByKey(
-                                    getWidget().focusedRow.getKey()));
+                    selectSelectedRowUtil(getWidget().focusedRow);
                 } else if (getWidget().selectedRowKeys.size() > 0) {
                     // try to focus any row in selection
-                    getWidget().setRowFocus(
-                            getWidget().getRenderedRowByKey(
-                                    getWidget().selectedRowKeys.iterator()
-                                            .next()));
+                    final Iterator<String> iterator = getWidget().selectedRowKeys.iterator();
+                    while (iterator.hasNext()) {
+                        final VScrollTableRow row = getWidget().
+                                getRenderedRowByKey(iterator.next());
+                        if (selectSelectedRowUtil(row)) {
+                            break;
+                        }
+                    }
                 } else {
                     // try to focus any row
                     getWidget().focusRowFromBody();
@@ -319,6 +321,17 @@ public class TableConnector extends AbstractHasComponentsConnector implements
         getWidget().rendering = false;
         getWidget().headerChangedDuringUpdate = false;
 
+    }
+
+    private boolean selectSelectedRowUtil(VScrollTableRow row) {
+        final int firstRowInViewPort = getWidget().calcFirstRowInViewPort();
+        final int index = row.getIndex();
+        final boolean b = firstRowInViewPort <= index &&
+                index < firstRowInViewPort + getWidget().getFullyVisibleRowCount();
+        if (b) {
+            getWidget().setRowFocus(row);
+        }
+        return b;
     }
 
     @Override
