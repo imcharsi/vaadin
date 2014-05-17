@@ -1087,7 +1087,11 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
                                         .getKey())) {
                             // The focus is no longer on a selected row,
                             // move focus to first selected row
-                            setRowFocus(row);
+                            if (firstRowInViewPort <= row.getIndex()
+                                    && row.getIndex() <
+                                    (firstRowInViewPort + getFullyVisibleRowCount())) {
+                                setRowFocus(row);
+                            }
                         }
                     }
                     if (selected != row.isSelected()) {
@@ -7035,7 +7039,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
     }
 
-    protected int calcFirstRowInViewPort() {
+    public int calcFirstRowInViewPort() {
         return (int) Math.ceil(scrollTop / scrollBody.getRowHeight());
     }
 
@@ -7517,7 +7521,7 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         return focusedRow.getIndex() + 1 >= totalRows;
     }
 
-    private int getFullyVisibleRowCount() {
+    public int getFullyVisibleRowCount() {
         return (int) (scrollBodyPanel.getOffsetHeight() / scrollBody
                 .getRowHeight());
     }
@@ -7911,5 +7915,9 @@ public class VScrollTable extends FlowPanel implements HasWidgets,
         }
         // Nothing found.
         return null;
+    }
+
+    public int getFirstRowInViewPort() {
+        return firstRowInViewPort;
     }
 }
